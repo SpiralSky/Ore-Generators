@@ -18,7 +18,7 @@ import static com.spiralsky.oregenerators.OreGenerators.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CobbleGenEvent {
-    static final ArrayList<Block> oreBlocks = new ArrayList<Block>();
+    static final ArrayList<Block> oreBlocks = new ArrayList<>();
     static int currentIndex = 0;
 
     @SubscribeEvent
@@ -34,11 +34,16 @@ public class CobbleGenEvent {
         }
     }
 
+    @SuppressWarnings("SameReturnValue")
     public static ArrayList<Block> getOrePool() {
         if (!CobbleGenEvent.oreBlocks.isEmpty()) {
             return CobbleGenEvent.oreBlocks;
         }
+        CobbleGenEvent.updateOrePool();
+        return CobbleGenEvent.oreBlocks;
+    }
 
+    public static void updateOrePool() {
         final ITagManager<Block> blockTagManager = ForgeRegistries.BLOCKS.tags();
         final TagKey<Block> oreTagKey = Objects.requireNonNull(blockTagManager).createTagKey(ResourceLocation.fromNamespaceAndPath("forge", "ores"));
         final ITag<Block> oreTag = blockTagManager.getTag(oreTagKey);
@@ -48,7 +53,5 @@ public class CobbleGenEvent {
                 CobbleGenEvent.oreBlocks.add(value);
             }
         });
-
-        return CobbleGenEvent.oreBlocks;
     }
 }
